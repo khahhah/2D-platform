@@ -5,13 +5,14 @@ using UnityEngine;
 public class enemy : MonoBehaviour
 {
     [SerializeField]
-    GameObject stonepref;
+    private GameObject stonepref;
 
     int s_left = -1;
 
     float bossSpeed = 10f;
     float stoptime = 0;
-    int hp = 100;
+    public float hp = 100f;
+    public float b_attack = 10;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,11 +31,9 @@ public class enemy : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-
-        if(collision.gameObject.tag == "Wall")
+        if (collision.gameObject.tag == "Wall")
         {
             stoptime = 0;
 
@@ -42,13 +41,15 @@ public class enemy : MonoBehaviour
             Skill();
         }
     }
+
     void Skill()
     {
-        if (hp > 50)
+        if (hp < 50)
         {
             GameObject stone = Instantiate(stonepref) as GameObject;
             float xpos = GameObject.Find("Player").GetComponent<Transform>().position.x;
             stone.transform.position = new Vector2(xpos, 5.5f);
+            bossSpeed = 15f;
         }
     }
 }

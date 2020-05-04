@@ -9,23 +9,29 @@ public class playerMove : MonoBehaviour
     [SerializeField]
     float jumpPower = 100f;
     [SerializeField]
-    GameObject bullet;
-    [SerializeField]
-    int attack = 1;
+    private GameObject bullet;
+    public int attack = 1;
     bool isground;
+    public float p_hp = 100f;
 
     public int s_right = 1; //캐릭터가 오른쪽을 보고 있다.
     // Start is called before the first frame update
     void Start()
     {
         isground = true;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_control();
+        if (p_hp > 0)
+        {
+            m_control();
         transform.localScale = new Vector3(s_right, 1, 1);  //방향을 바꿔주기
+        
+        }
+        die();
     }
 
     void m_control()
@@ -59,5 +65,27 @@ public class playerMove : MonoBehaviour
     {
         if(collision.gameObject.tag == "Ground")
             isground = true;
+        
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Enemy")
+        {
+            Vector2 damagedVelocity = Vector2.zero;
+            if (s_right == 1) damagedVelocity = new Vector2(-2f, 3f);
+            else damagedVelocity = new Vector2(2f, 3f);
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            GetComponent<Rigidbody2D>().AddForce(damagedVelocity, ForceMode2D.Impulse);
+
+            p_hp -= GameObject.FindWithTag("Enemy").GetComponent<enemy>().b_attack;
+        }
+    }
+    void die()
+    {
+        if (p_hp <= 0)
+        {
+
+            Debug.Log("게임오버 ㅠㅠ");
+        }
     }
 }
