@@ -12,11 +12,11 @@ public class bullet : MonoBehaviour
 
     int front;
 
-    public int attack = 1;
+    public float attack = 1f;
     // Start is called before the first frame update
     void Start()
     {
-        front = GameObject.Find("Player").GetComponent<playerMove>().s_right;
+        front = GameObject.FindWithTag("Player").GetComponent<playerMove>().s_right;
     }
 
     // Update is called once per frame

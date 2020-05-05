@@ -15,10 +15,12 @@ public class playerMove : MonoBehaviour
     public float p_hp = 100f;
 
     public int s_right = 1; //캐릭터가 오른쪽을 보고 있다.
+    bool ishit; //플레이어가 피격을 당한 상태
     // Start is called before the first frame update
     void Start()
     {
         isground = true;
+        ishit = false;
         
     }
 
@@ -50,6 +52,7 @@ public class playerMove : MonoBehaviour
         {
             GameObject bullet1 = Instantiate(bullet) as GameObject;
             Vector2 pos = this.gameObject.transform.position;
+            pos.y -= 0.2f;
             bullet1.transform.position = pos;
         }
         if (isground)
@@ -67,9 +70,9 @@ public class playerMove : MonoBehaviour
             isground = true;
         
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Enemy")
+        if(collision.gameObject.tag == "Enemy"&& !ishit)
         {
             Vector2 damagedVelocity = Vector2.zero;
             if (s_right == 1) damagedVelocity = new Vector2(-2f, 3f);
@@ -78,7 +81,31 @@ public class playerMove : MonoBehaviour
             GetComponent<Rigidbody2D>().AddForce(damagedVelocity, ForceMode2D.Impulse);
 
             p_hp -= GameObject.FindWithTag("Enemy").GetComponent<enemy>().b_attack;
+            if (p_hp > 0)
+            {
+                ishit = true;
+                StartCoroutine("Unhit");
+            }
         }
+    }
+    IEnumerator Unhit()
+    {
+        int count = 0;
+        while (count < 10)
+        {
+            if (count % 2 == 0)
+                GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 90);
+            else
+                GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 150);
+            yield return new WaitForSeconds(0.2f);
+
+
+            count++;
+        }
+        GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+
+        ishit = false;
+        yield return null;
     }
     void die()
     {

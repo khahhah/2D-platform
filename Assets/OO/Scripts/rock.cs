@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class rock : MonoBehaviour
 {
-    float r_attack = 10;
+    float b_attack = 10;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,12 +19,5 @@ public class rock : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            collision.gameObject.GetComponent<playerMove>().p_hp -= r_attack;
-            Destroy(gameObject);
-        }
-    }
+    
 }

@@ -10,7 +10,7 @@ public class enemy : MonoBehaviour
     int s_left = -1;
 
     float bossSpeed = 10f;
-    float stoptime = 0;
+    float stoptime = 4f;
     public float hp = 100f;
     public float b_attack = 10;
     // Start is called before the first frame update
@@ -47,7 +47,7 @@ public class enemy : MonoBehaviour
         if (hp < 50)
         {
             GameObject stone = Instantiate(stonepref) as GameObject;
-            float xpos = GameObject.Find("Player").GetComponent<Transform>().position.x;
+            float xpos = GameObject.FindWithTag("Player").GetComponent<Transform>().position.x;
             stone.transform.position = new Vector2(xpos, 5.5f);
             bossSpeed = 15f;
         }
