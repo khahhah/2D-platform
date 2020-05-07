@@ -36,7 +36,7 @@ public class bullet : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Enemy")
+        if(collision.gameObject.name == "Enemy")
         {
             Debug.Log("아파아이잉");
             collision.gameObject.GetComponent<enemy>().hp -= attack;
