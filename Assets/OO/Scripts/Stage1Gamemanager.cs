@@ -1,26 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Stage1Gamemanager : MonoBehaviour
 {
-    [SerializeField]
-    GameObject B_hpbar;
+    
+    float bosshp;
     // Start is called before the first frame update
     void Start()
     {
         
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        bosshp();
+        bosshp = GameObject.FindWithTag("Enemy").GetComponent<enemy>().hp;
+        youwin();
+
     }
-    void bosshp()
+    void youwin()
     {
-        float hp = GameObject.FindWithTag("Enemy").GetComponent<enemy>().hp;
-        B_hpbar.GetComponent<Image>().fillAmount = hp / 100f;
+        if (bosshp <= 0)
+        {
+            Debug.Log("너 이겼어");
+            //gameObject.GetComponent<LobbyGameManager>().stage1boss = true;
+            SceneManager.LoadScene("Lobby");
+        }
     }
+    
 }
