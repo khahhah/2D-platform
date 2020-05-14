@@ -38,7 +38,6 @@ public class bullet : MonoBehaviour
     {
         if(collision.gameObject.name == "Enemy")
         {
-            Debug.Log("아파아이잉");
             collision.gameObject.GetComponent<enemy>().hp -= attack;
         }
     }

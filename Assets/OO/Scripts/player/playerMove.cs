@@ -9,8 +9,7 @@ public class playerMove : MonoBehaviour
     float playerSpeed=3f;
     [SerializeField]
     float jumpPower = 100f;
-    [SerializeField]
-    private GameObject bullet;
+    public GameObject bullet;
     public int attack = 1;
     bool isground;
     public float p_hp = 100f;
@@ -19,12 +18,17 @@ public class playerMove : MonoBehaviour
 
     public int s_right = 1; //캐릭터가 오른쪽을 보고 있다.
     bool ishit; //플레이어가 피격을 당한 상태
+    float count; //오토파이어 테스트용
+
+    GameObject child;
     // Start is called before the first frame update
     void Start()
     {
+        child = transform.GetChild(0).gameObject;
         isground = true;
         ishit = false;
         p_hpbar = GameObject.Find("p_hp");
+        StartCoroutine("Autofire");
     }
 
     // Update is called once per frame
@@ -33,7 +37,7 @@ public class playerMove : MonoBehaviour
         if (p_hp > 0)
         {
             m_control();
-        transform.localScale = new Vector3(s_right, 1, 1);  //방향을 바꿔주기
+            child.transform.localScale = new Vector3(s_right, 1, 1);  //방향을 바꿔주기
         
         }
         Playerhp();
@@ -72,7 +76,8 @@ public class playerMove : MonoBehaviour
     {
         if (p_hp <= 0)
         {
-            transform.Rotate(0, 0, 90);
+            Time.timeScale = 0.4f;
+            child.GetComponent<Animator>().Play("die");
         }
     }
     void Playerhp()
@@ -109,18 +114,33 @@ public class playerMove : MonoBehaviour
         while (count < 10)
         {
             if (count % 2 == 0)
-                GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 90);
+                child.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 90);
             else
-                GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 150);
+                child.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 150);
             yield return new WaitForSeconds(0.2f);
 
 
             count++;
         }
-        GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+        child.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
 
         ishit = false;
         yield return null;
     }
+    IEnumerator Autofire()  //자동공격
+    {
+        while (true)
+        {
+            if (Input.GetKey(KeyCode.Z))
+            {
+                GameObject bullet1 = Instantiate(bullet) as GameObject;
+                Vector2 pos = this.gameObject.transform.position;
+                pos.y -= 0.2f;
+                bullet1.transform.position = pos;
+            }
+            yield return new WaitForSeconds(0.3f);
 
+        }
+
+    }
 }
