@@ -8,30 +8,34 @@ public class enemy : MonoBehaviour
     public GameObject stonepref;
 
     GameObject child;
-    Animator b_animator;
+    public Animator b_animator;
 
     int s_left = -1;
 
     float bossSpeed = 15f;
-    float stoptime = -2f;
+    public float stoptime = 0f;
     public float hp = 100f;
     public float b_attack = 10;
+    public Text hp_text;
 
     public bool angry = false;
+    public bool start = false;    //보스가 멈춰있을때
+
 
     GameObject b_hpbar; //보스 체력
+
     // Start is called before the first frame update
     void Start()
     {
         child = transform.GetChild(0).gameObject;
         b_hpbar = GameObject.Find("B_hp");
         b_animator = child.GetComponent<Animator>();
-        b_animator.Play("Idle");
     }
 
     // Update is called once per frame
     void Update()
     {
+        AnimationUpdate();
         stoptime += Time.deltaTime;
         if (hp > 0)
         {
@@ -39,11 +43,17 @@ public class enemy : MonoBehaviour
         }
 
         bosshp();
-        //if (hp <= 50) angry = true;
+    }
+    void AnimationUpdate()
+    {
+        if (start)
+        {
+            b_animator.SetBool("isStart", true);
+        }
     }
     void BossMove() //보스의 이동패턴
     {
-        if (stoptime > 3f)
+        if (stoptime > 3f && start)
         {
             GetComponent<Collider2D>().enabled = true;
             b_animator.Play("run");
@@ -55,6 +65,7 @@ public class enemy : MonoBehaviour
     void bosshp()       //보스 체력표시
     {
         b_hpbar.GetComponent<Image>().fillAmount = hp / 100f;
+        hp_text.text = hp + " / 100";
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -64,6 +75,7 @@ public class enemy : MonoBehaviour
             stoptime = 0;
             s_left = -1 * s_left;
             Skill();
+            Camera.main.GetComponent<CameraShake>().CameraShaker();
         }
     }
 

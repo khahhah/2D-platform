@@ -14,7 +14,7 @@ public class Stage1Gamemanager : MonoBehaviour
     public Text p_anykey;
     string win, lose;
     float count;
-    
+    bool bstart;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,12 +24,27 @@ public class Stage1Gamemanager : MonoBehaviour
 
     }
 
+    void Awake()
+    {
+        bstart = GameObject.FindWithTag("Enemy").GetComponent<enemy>().start;
+    }
     // Update is called once per frame
     void Update()
     {
         bosshp = GameObject.FindWithTag("Enemy").GetComponent<enemy>().hp;
         playerhp = GameObject.Find("oo").GetComponent<playerMove>().p_hp;
         Youwin();
+        
+
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "Player"&& !bstart)
+        {
+            bstart = true;
+            GameObject.FindWithTag("Enemy").GetComponent<enemy>().start = true;
+            GameObject.FindWithTag("Enemy").GetComponent<enemy>().stoptime = -1f;
+        }
 
     }
     void Youwin()
@@ -63,4 +78,5 @@ public class Stage1Gamemanager : MonoBehaviour
             }
         }
     }
+    
 }
